@@ -7,20 +7,44 @@
   <input type="text" placeholder="Search for products" [formControl]="searchField" class="">
 </section>
 
-<main>
+<main *ngIf="products.length">
   <nav class="pagination flex flex-between flex-middle mb-4">
     <div>{{ currentPage }}/{{ numberOfPages() }}</div>
     <ul class="pagination-list" style="cursor: pointer;">
-        <li class="pagination-item" *ngIf="currentPage != 1">
-          <a class="pagination-link" (click)="currentPage = currentPage - 1">&lt; Previous</a>
-        </li>
-        <li class="pagination-item" *ngIf="currentPage < numberOfPages()">
-          <a class="pagination-link" (click)="currentPage = currentPage + 1">Next &gt;</a>
-        </li>
+      <li class="pagination-item" *ngIf="currentPage != 1">
+        <a class="pagination-link" (click)="currentPage = currentPage - 1">&lt; Previous</a>
+      </li>
+      <li class="pagination-item" *ngIf="currentPage < numberOfPages()">
+        <a class="pagination-link" (click)="currentPage = currentPage + 1">Next &gt;</a>
+      </li>
     </ul>
   </nav>
 
-  <table class="table-striped">
+  <div class="grid grid-3">
+
+    <div class="card bg-light r-base p-8 sh-200"
+      *ngFor="let product of products | slice: (currentPage * maxPerPage) - maxPerPage :currentPage * maxPerPage">
+      <div class="card-label mb-3">
+        <span class="label label-important">{{ product.suppliername }}</span>
+      </div>
+      <div class="card-head">
+        <h2 class="heading-medium">
+          <a href="#">{{ product.title }}</a>
+        </h2>
+      </div>
+      <div class="card-body mt-3">
+        <p class="text-medium">{{ product.price }},- DKK</p>
+      </div>
+      <div class="card-foot mt-5 text-small text-muted row row-4">
+        <time>{{ product.created | date }}</time>
+        <span>/</span>
+        <span>{{ product.brand ?? 'No brand' }}</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- <table class="table-striped">
     <thead>
       <tr>
         <th>Title</th>
@@ -37,5 +61,5 @@
         </td>
       </tr>
     </tbody>
-  </table>
+  </table> -->
 </main>

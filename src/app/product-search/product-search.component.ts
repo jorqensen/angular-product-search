@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, map, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { Product } from 'src/types';
 import { ProductService } from '../product.service';
 
@@ -15,20 +15,19 @@ export class ProductSearchComponent implements OnInit {
 
   // Pagination
   public currentPage: number = 1;
-  public maxPerPage: number = 20;
+  public maxPerPage: number = 6;
 
   constructor(private productService: ProductService) { }
 
   ngOnInit(): void {
-    this.productService.getProducts().pipe(
-      map(products => products.content)
-    ).subscribe(products => this.products = products);
-
     this.searchField.valueChanges.pipe(
       debounceTime(400),
       distinctUntilChanged(),
-      tap(() => console.log('Supposed to fetch products here and filter...')),
-    ).subscribe(input => "Query by: " + console.log(input));
+      switchMap(query => this.productService.getProducts(query))
+    ).subscribe((products) => {
+      this.products = products;
+      this.currentPage = 1;
+    });
   }
 
   numberOfPages(): number {
