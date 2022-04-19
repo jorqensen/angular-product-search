@@ -4,7 +4,7 @@
 </header>
 
 <section class="mb-4">
-  <input type="text" placeholder="Search for products" [formControl]="searchField" class="">
+  <input type="text" placeholder="Search for products" [formControl]="searchField" class="input">
 </section>
 
 <main *ngIf="products.length">
@@ -12,20 +12,19 @@
     <div>{{ currentPage }}/{{ numberOfPages() }}</div>
     <ul class="pagination-list" style="cursor: pointer;">
       <li class="pagination-item" *ngIf="currentPage != 1">
-        <a class="pagination-link" (click)="currentPage = currentPage - 1">&lt; Previous</a>
+        <a class="pagination-link pagination-prev" (click)="currentPage = currentPage - 1">&lt; Previous</a>
       </li>
       <li class="pagination-item" *ngIf="currentPage < numberOfPages()">
-        <a class="pagination-link" (click)="currentPage = currentPage + 1">Next &gt;</a>
+        <a class="pagination-link pagination-next" (click)="currentPage = currentPage + 1">Next &gt;</a>
       </li>
     </ul>
   </nav>
 
   <div class="grid grid-3">
-
-    <div class="card bg-light r-base p-8 sh-200"
+    <div class="card bg-light r-base p-8 shadow-200"
       *ngFor="let product of products | slice: (currentPage * maxPerPage) - maxPerPage :currentPage * maxPerPage">
       <div class="card-label mb-3">
-        <span class="label label-important">{{ product.suppliername }}</span>
+        <span class="label label-important">{{ product.suppliername ?? 'No suppliername' }}</span>
       </div>
       <div class="card-head">
         <h2 class="heading-medium">
@@ -41,25 +40,5 @@
         <span>{{ product.brand ?? 'No brand' }}</span>
       </div>
     </div>
-
   </div>
-
-  <!-- <table class="table-striped">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th class="align-right">Price</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let product of products | slice: (currentPage * maxPerPage) - maxPerPage :currentPage * maxPerPage">
-        <td>
-          {{ product.title | slice:0:100 }}...
-        </td>
-        <td class="align-right">
-          {{ product.price }},- DKK
-        </td>
-      </tr>
-    </tbody>
-  </table> -->
 </main>
